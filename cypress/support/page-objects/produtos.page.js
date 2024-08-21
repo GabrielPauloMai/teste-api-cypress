@@ -90,5 +90,60 @@ class ProdutosPage {
             )
         }
     }
+
+    /**
+     * Edita um produto
+     * @param {string} produto_id
+     * @param {Produto} produto
+     * @returns {Promise} Promessa que resolve com os dados da resposta
+     */
+    editarProduto(produto_id, produto) {
+        return cy.request({
+            method: 'PUT',
+            url: `produtos/${produto_id}`,
+            headers: {
+                authorization: this.token
+            },
+            body: produto
+        }).then((responseData) => {
+            return cy.wrap({
+                status: responseData.status,
+                body: responseData.body
+            })
+        })
+    }
+
+
+    /**
+     * Deleta um produto
+     * @param {string} produto_id
+     * @returns {Promise} Promessa que resolve com os dados da resposta
+     */
+    deletarProduto(produto_id) {
+        return cy.request({
+            method: 'DELETE',
+            url: `produtos/${produto_id}`,
+            headers: {
+                authorization: this.token
+            }
+        }).then((responseData) => {
+            return cy.wrap({
+                status: responseData.status,
+                body: responseData.body
+            })
+        })
+    }
+
+    /**
+     *Retorna o _id de um produto aleatório
+     * @returns {string}
+     * */
+    obterProdutoAleatorio() {
+        return this.listarProdutos().then((response) => {
+            return response.body.produtos[
+                Math.floor(Math.random() * (response.body.quantidade - 0 + 1))
+                ]._id
+        })
+    }
 }
 export default new ProdutosPage()
