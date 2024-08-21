@@ -1,10 +1,17 @@
 /// reference types="cypress" />;
 import ProdutosPage from "../support/page-objects/produtos.page";
+import produtosContratos from "../contratos/produtos.contratos";
 
 describe('Teste de API - Produtos', () => {
   before(() => {
     ProdutosPage.obterToken();
   })
+
+  it.only('Deve validar o contrato de produtos com sucesso', () => {
+    ProdutosPage.listarProdutos().then((response) => {
+      produtosContratos.validateAsync(response.body)
+    })
+  });
 
   it('Deve listar produtos com sucesso - GET', () => {
     ProdutosPage.listarProdutos().then((response) => {
