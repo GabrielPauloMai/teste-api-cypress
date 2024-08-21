@@ -1,14 +1,12 @@
 /// reference types="cypress" />;
 import ProdutosPage from "../support/page-objects/produtos.page";
 
-
-
 describe('Teste de API - Produtos', () => {
   before(() => {
     ProdutosPage.obterToken();
   })
 
-  it('Deve listar produtos com sucesso', () => {
+  it('Deve listar produtos com sucesso - GET', () => {
     ProdutosPage.listarProdutos().then((response) => {
       expect(response.status).to.eq(200)
       expect(response.body.produtos).to.be.an('array')
@@ -16,7 +14,7 @@ describe('Teste de API - Produtos', () => {
     })
   })
 
-  it('Deve cadastrar um produto com sucesso', () => {
+  it('Deve cadastrar um produto com sucesso - POST', () => {
     ProdutosPage.criarProduto(ProdutosPage.gerarProduto()).then((response) => {
       expect(response.status).to.eq(201)
       expect(response.body.message).to.equal('Cadastro realizado com sucesso')
@@ -24,7 +22,7 @@ describe('Teste de API - Produtos', () => {
   })
 
 
-  it('Deve validar mensagem de produto já cadastrado', () => {
+  it('Deve validar mensagem de produto já cadastrado - POST', () => {
 
     const produto = {
       nome: 'Samsung 60 polegadas',
@@ -39,4 +37,28 @@ describe('Teste de API - Produtos', () => {
     })
 
   })
+
+  it('Deve editar um produto com sucesso - PUT', () => {
+
+    ProdutosPage.obterProdutoAleatorio().then((produto_id) => {
+      ProdutosPage.editarProduto(produto_id, ProdutosPage.gerarProduto()).then((response) => {
+        expect(response.status).to.eq(200)
+        expect(response.body.message).to.equal('Registro alterado com sucesso')
+      })
+    })
+
+  })
+
+  it('Deve deletar um produto com sucesso - DELETE', () => {
+
+    ProdutosPage.obterProdutoAleatorio().then((produto_id) => {
+        ProdutosPage.deletarProduto(produto_id).then((response) => {
+            expect(response.status).to.eq(200)
+            expect(response.body.message).to.equal('Registro excluído com sucesso')
+        })
+    })
+  })
+
+
+
 })
